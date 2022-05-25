@@ -1,30 +1,25 @@
-use ndarray::prelude::*;
-use ndarray::s;
+use na::Matrix3xX;
 
 #[derive(Debug, PartialEq)]
 pub struct Atoms {
     // pub positions: Array<f64, Dim<[usize; 2]>>,
-    pub positions: Array2<f64>,
-    pub velocities: Array2<f64>,
-    pub forces: Array2<f64>,
+    pub positions: Matrix3xX<f64>,
+    pub velocities: Matrix3xX<f64>,
+    pub forces: Matrix3xX<f64>,
     pub mass: f64,
 }
 
 impl Atoms {
-    pub fn new(coords: Array2<f64>, atom_mass: f64) -> Atoms {
+    pub fn new(coords: Matrix3xX<f64>, atom_mass: f64) -> Atoms {
         Atoms {
-            velocities: Array::zeros(coords.dim()),
-            forces: Array::zeros(coords.dim()),
+            velocities: Matrix3xX::zeros(coords.ncols()),
+            forces: Matrix3xX::zeros(coords.ncols()),
             positions: coords,
             mass: atom_mass,
         }
     }
     pub fn num_atoms(&self) -> usize {
-        self.positions.cols()
-    }
-
-    pub fn test(&mut self) {
-        let a = self.positions.slice(s![0..10, ..]);
+        self.positions.ncols()
     }
 }
 

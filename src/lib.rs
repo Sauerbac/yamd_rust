@@ -1,5 +1,5 @@
 #[macro_use]
-extern crate ndarray;
+extern crate nalgebra as na;
 
 mod atoms;
 

@@ -1,14 +1,13 @@
+extern crate nalgebra as na;
 mod atoms;
 use atoms::Atoms;
-use ndarray::{array, s, Array};
+use na::{Matrix3xX, Vector3};
 use std::thread::sleep;
 use std::time::Instant;
 
 fn main() {
     // // let coords1 = array![[1.0, 2.0, 3.0], [1.0, 2.0, 3.0]];
-    let coords1 = Array::ones((3, 100));
-    let shape = &coords1.dim();
-    println!("{}-{}", shape.0, shape.1);
+    let coords1 = Matrix3xX::zeros(1000);
     let mut atoms1 = Atoms::new(coords1, 1.0);
     println!("{}", atoms1.num_atoms());
     println!("{:p}", &atoms1);
@@ -28,4 +27,7 @@ fn main() {
     println!("{:p}", &atoms1);
 
     println!("{}", now2.elapsed().as_micros());
+
+    let p1 = Vector3::new(0.0, 0.0, 0.0).shape();
+    println!("{:?}", p1);
 }

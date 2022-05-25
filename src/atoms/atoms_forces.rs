@@ -1,9 +1,9 @@
 use crate::atoms::atoms::Atoms;
-use ndarray::prelude::*;
+use na::MatrixSlice3x1;
 
-fn euclidean_distance_3d(p: &ArrayView2<f64>, q: &ArrayView2<f64>) -> f64 {
+fn euclidean_distance_3d(p: &MatrixSlice3x1<f64>, q: &MatrixSlice3x1<f64>) -> f64 {
     let diff = p - q;
-    f64::sqrt(diff.mapv(|diff| diff.powi(2)).sum())
+    f64::sqrt(diff.map(|diff| diff.powi(2)).sum())
 }
 
 // fn lj_direct_summation(atoms: &Atoms, epsilon: f64, sigma: f64) {
@@ -18,17 +18,16 @@ impl Atoms {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use ndarray::ArrayView;
+    use na::Matrix3x2;
     #[test]
     fn test_euclidean() {
-        let s1 = [0.0, 0.0, 0.0];
-        let p1 = ArrayView::from_shape((3, 1), &s1).unwrap();
+        let p1 = Matrix3x2::<f64>::zeros();
+        let v1 = p1.column(0);
 
-        let s2 = [1.0, 1.0, 1.0];
-        let p2 = ArrayView::from_shape((3, 1), &s2).unwrap();
+        let p2 = Matrix3x2::from_element(1.0);
+        let v2 = p2.column(0);
 
-        let res = euclidean_distance_3d(&p1, &p2);
-        println!("{:?}", res);
+        let res = euclidean_distance_3d(&v1, &v2);
         assert_eq!(f64::sqrt(3.0), res)
     }
 }
