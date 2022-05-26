@@ -18,6 +18,15 @@ impl Atoms {
             mass: atom_mass,
         }
     }
+
+    pub fn gen_num_atoms(num: usize) -> Atoms {
+        Atoms {
+            velocities: Matrix3xX::zeros(num),
+            forces: Matrix3xX::zeros(num),
+            positions: Matrix3xX::zeros(num),
+            mass: 1.0,
+        }
+    }
     pub fn num_atoms(&self) -> usize {
         self.positions.ncols()
     }
