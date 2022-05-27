@@ -10,7 +10,16 @@ pub struct Atoms {
 }
 
 impl Atoms {
-    pub fn new(coords: Matrix3xX<f64>, atom_mass: f64) -> Atoms {
+    pub fn new() -> Atoms {
+        Atoms {
+            positions: Matrix3xX::zeros(0),
+            velocities: Matrix3xX::zeros(0),
+            forces: Matrix3xX::zeros(0),
+            mass: 0.0,
+        }
+    }
+
+    pub fn new_from_coords(coords: Matrix3xX<f64>, atom_mass: f64) -> Atoms {
         Atoms {
             velocities: Matrix3xX::zeros(coords.ncols()),
             forces: Matrix3xX::zeros(coords.ncols()),
