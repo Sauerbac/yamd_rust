@@ -4,6 +4,7 @@ use std::fmt;
 use std::fs::File;
 use std::io::prelude::*;
 use std::io::{self, BufReader, BufWriter};
+use std::path::Path;
 
 static ATOMIC_MASSES: [(&str, f64); 118] = [
     ("H", 1.008),
@@ -152,6 +153,23 @@ pub fn d<T: fmt::Debug>(what_to_print: T) -> () {
     println!("{:?}", what_to_print)
 }
 
+pub fn append_xyz(system: &Atoms, buffer: &mut BufWriter<File>) {
+    write!(buffer, "{}\n\n", system.num_atoms());
+    let atom_symbol = get_atomic_str(system.mass);
+    let atom_iter = system
+        .positions
+        .column_iter()
+        .zip(system.velocities.column_iter());
+    for (p, v) in atom_iter {
+        writeln!(
+            buffer,
+            " {}\t{:?}\t{:?}\t{:?}\t\t{:?}\t{:?}\t{:?}",
+            atom_symbol, p[0], p[1], p[2], v[0], v[1], v[2]
+        )
+        .unwrap()
+    }
+}
+
 impl Atoms {
     pub fn read(file_path: &String) -> Atoms {
         let f = File::open(file_path).unwrap();
@@ -163,7 +181,7 @@ impl Atoms {
             .parse::<usize>()
             .expect("Could not parse integer");
 
-        let mut new = Atoms::gen_num_atoms(natoms);
+        let mut new = Atoms::new(natoms);
         let mut name;
         for i in 0..natoms {
             let splitted = lines[i + 2].split_whitespace().collect::<Vec<_>>();
@@ -196,18 +214,24 @@ impl Atoms {
     }
 
     pub fn write(&self, file_path: &str) {
-        let mut f = BufWriter::new(File::create(file_path).expect("Unable to create file"));
+        let path = Path::new(file_path);
+        let mut f: BufWriter<File>;
+        if path.exists() {
+            f = BufWriter::new(File::open(path).expect("Unable to open file"));
+        } else {
+            f = BufWriter::new(File::create(path).expect("Unable to create file"));
+        }
         write!(f, "{}\n\n", self.num_atoms());
 
         let atom_symbol = get_atomic_str(self.mass);
-        let mut atom_iter = self
+        let atom_iter = self
             .positions
             .column_iter()
             .zip(self.velocities.column_iter());
         for (p, v) in atom_iter {
-            write!(
+            writeln!(
                 f,
-                " {}\t{:?}\t{:?}\t{:?}\t\t{:?}\t{:?}\t{:?}\n",
+                " {}\t{:?}\t{:?}\t{:?}\t\t{:?}\t{:?}\t{:?}",
                 atom_symbol, p[0], p[1], p[2], v[0], v[1], v[2]
             )
             .unwrap()

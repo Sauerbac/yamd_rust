@@ -1,0 +1,2 @@
+pub const BOLTZMANN: f64 = 8.617332385e-5;
+pub const AVOGADRO: f64 = 6.02214179e23;
