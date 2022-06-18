@@ -8,8 +8,6 @@ impl Atoms {
         self
     }
     pub fn verlet2(mut self, timestep: f64) -> Atoms {
-        // self.velocities = &self.velocities
-        //     + Matrix3xX::from_element(self.num_atoms(), 1.0 + 0.5 * timestep / self.mass);
         self.velocities = &self.velocities + 0.5 * &self.forces * timestep / self.mass;
         self
     }

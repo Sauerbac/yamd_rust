@@ -142,7 +142,7 @@ pub fn get_atomic_str(atom_mass: f64) -> String {
             return String::from(*symbol);
         }
     }
-    return String::from("fk");
+    return String::from("H");
 }
 
 pub fn p<T: fmt::Display>(what_to_print: T) -> () {

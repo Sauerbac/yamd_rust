@@ -45,6 +45,12 @@ impl Atoms {
         let kinetic = self.kinetic_energy();
         kinetic / ((3.0 / 2.0) * constants::BOLTZMANN * self.num_atoms() as f64)
     }
+
+    pub fn berendsen(mut self, temperature: f64, timestep: f64, tau: f64) -> Atoms {
+        let lambda = (1.0 + (temperature / self.temperature() - 1.0) * timestep / tau).sqrt();
+        self.velocities = self.velocities * lambda;
+        self
+    }
 }
 
 #[cfg(test)]
